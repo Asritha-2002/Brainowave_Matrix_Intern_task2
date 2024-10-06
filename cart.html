@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cart Page</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="container">
+      <nav class="navigation">
+        <h1>Med+</h1>
+        <a href="index.html" id="a1">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="About.html">About Us</a>
+        <a href="Contact.html">Contact Us</a>
+        <a href="cart.html">Cart</a>
+      </nav>
+      <hr />
+    </header>
+
+    <main class="mcart">
+      <h2 class="subH">Your Cart</h2>
+
+      <div id="orderedItems"></div>
+      <section id="form" style="visibility: hidden">
+        <form class="pForm">
+          <hr />
+          <h1 id="pHead">Product Order Form</h1>
+          <h4 id="hform">Please fill out the required fields to place order</h4>
+
+          <label for="name">Full Name</label><br />
+          <input type="text" id="fname" placeholder="First Name" required />
+          <input
+            type="text"
+            id="lname"
+            placeholder="Last Name"
+            required
+          /><br /><br />
+          <label for="mail">Email</label><br />
+          <input
+            type="email"
+            id="mail"
+            placeholder="sample@gmail.com"
+            required
+          /><br /><br />
+          <label for="number">Phone Number</label><br />
+          <input
+            type="tel"
+            id="number"
+            placeholder="1234567890"
+            required
+          /><br /><br /><br />
+          <label for="address">Shipping Address</label><br />
+          <div class="lflex">
+            <input
+              type="address"
+              id="address1"
+              placeholder="Address line 1"
+              required
+            /><br /><br />
+            <input
+              type="address"
+              id="address2"
+              placeholder="Address line 2"
+              required
+            /><br /><br />
+
+            <input
+              type="address"
+              id="code"
+              placeholder="Postal/Zip Code"
+              required
+            /><br /><br />
+          </div>
+          <div class="lflex2">
+            <input
+              type="address"
+              id="city"
+              placeholder="City"
+              required
+            /><br /><br />
+            <input
+              type="address"
+              id="region"
+              placeholder="Region"
+              required
+            /><br /><br />
+            <select>
+              <option>India</option>
+              <option>America</option>
+              <option>Canada</option>
+              <option>Russia</option>
+              <option>England</option>
+              <option>UK</option>
+            </select>
+          </div>
+
+          <button id="sbtn" type="button" onclick="stored()">Submit</button>
+        </form>
+        <hr />
+        <div class="payment">
+          <h2>Select Payment Type Below</h2>
+
+          <input
+            type="radio"
+            id="CashonDelivery"
+            value="Cash on Delivery"
+            name="pay"
+          />
+          <label for="CashonDelivery">Cash on Delivery</label><br />
+          <input type="radio" id="upi" value="Pay By any UPI App" name="pay" />
+          <label for="upi">Pay By any UPI App</label><br />
+          <input type="radio" id="wallet" value="wallet" name="pay" />
+          <label for="wallet">Wallet</label><br />
+          <input
+            type="radio"
+            id="cards"
+            value="Debit/Credit Cards"
+            name="pay"
+          />
+          <label for="cards">Debit/Credit Cards</label><br />
+          <input type="radio" id="net" value="Net Banking" name="pay" />
+          <label for="net">Net Banking</label><br />
+          <button id="placeOrder" onclick="placeOrder()">Place Order</button>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        let orderedItems = document.getElementById("orderedItems");
+        let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+        let totalCost = 0;
+        if (cartItems.length === 0) {
+          orderedItems.innerHTML = "<p>Your cart is empty.</p>";
+        } else {
+          cartItems.forEach((item) => {
+            let itemDiv = document.createElement("div");
+            itemDiv.classList.add("cart-item");
+
+            let img = document.createElement("img");
+            img.src = item.image;
+            itemDiv.appendChild(img);
+
+            let name = document.createElement("p");
+            name.textContent = item.name;
+            itemDiv.appendChild(name);
+
+            let cost = document.createElement("h3");
+            cost.textContent = `Product Cost: ${item.cost}\\-`;
+            cost.id = "pcost";
+            itemDiv.appendChild(cost);
+
+            let quantity = document.createElement("h4");
+            quantity.textContent = `Product Quantity: ${item.quantity}`;
+
+            quantity.id = "pquantity";
+            itemDiv.appendChild(quantity);
+
+            let total = document.createElement("p");
+            total.textContent = `Total product cost ${
+              item.cost * item.quantity
+            }\\-`;
+            console.log(item.quantity);
+            console.log(item.cost);
+            total.id = "ptotal";
+            itemDiv.appendChild(total);
+
+            totalc = item.cost * item.quantity;
+            totalCost += totalc;
+            console.log(totalCost);
+
+            orderedItems.appendChild(itemDiv);
+          });
+
+          let itemDiv2 = document.createElement("div");
+          itemDiv2.classList.add("cart-item2");
+          let costH = document.createElement("h2");
+          costH.textContent = `Total Products Cost is :${totalCost}\\-`;
+          itemDiv2.appendChild(costH);
+          let placeOrder = document.createElement("a");
+          placeOrder.textContent = "Fill the Form to Continue";
+          placeOrder.href = "#form";
+          placeOrder.id = "oPlace";
+          itemDiv2.appendChild(placeOrder);
+          orderedItems.appendChild(itemDiv2);
+          let oPlace = document.getElementById("oPlace");
+          oPlace.onclick = () => {
+            let form = document.getElementById("form");
+            form.style.visibility = "visible";
+          };
+        }
+      });
+
+      let fName = document.getElementById("fname");
+      let lName = document.getElementById("lname");
+      let mail = document.getElementById("mail");
+      let number = document.getElementById("number");
+      let address1 = document.getElementById("address1");
+      let address2 = document.getElementById("address2");
+      let city = document.getElementById("city");
+      let region = document.getElementById("region");
+      let code = document.getElementById("code");
+      function stored(e) {
+        if (
+          fName.value === "" ||
+          lName.value === "" ||
+          mail.value === "" ||
+          number.value === "" ||
+          address1.value === "" ||
+          address2.value === "" ||
+          city.value === "" ||
+          region.value === "" ||
+          code.value === ""
+        ) {
+          alert("please fill the form");
+        } else {
+          alert(
+            "Your Address Saved Successfully.Please select Payment Type Below"
+          );
+          fName.value = "";
+          lName.value = "";
+          mail.value = "";
+          number.value = "";
+          address1.value = "";
+          address2.value = "";
+          city.value = "";
+          region.value = "";
+          code.value = "";
+        }
+      }
+
+      function placeOrder() {
+        alert("Your Order Placed Successfully.Visit AGAIN🙂");
+      }
+    </script>
+  </body>
+</html>
